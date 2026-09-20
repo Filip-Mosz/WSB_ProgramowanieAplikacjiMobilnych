@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, FlatList, Text } from 'react-native';
 import DepartureCard from '../../components/DepartureCard';
+import { FavoritesCounter } from "@/components/FavoriteCounter";
 
 export default function HomeScreen() {
   const [departures] = useState([
@@ -18,6 +19,9 @@ export default function HomeScreen() {
   return (
       <View style={styles.container}>
         <Text style={styles.header}>Najbliższe odjazdy (Mock)</Text>
+
+      {/* Reaktywny licznik podpięty pod Zustand */}
+      <FavoritesCounter />
 
         <FlatList
             data={departures}

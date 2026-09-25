@@ -13,14 +13,14 @@ export const delayFormatter = (delay: number | null): DelayInfo => {
         };
     }
 
-    if (delay <= 15) {  //probably just arrived, but not yet stopped
+    if (delay <= 60) {
         return {
             category: 'small',
             shouldAnimate: false,
         };
     }
 
-    if (delay <= 45) { //probably in sight
+    if (delay <= 120) {
         return {
             category: 'medium',
             shouldAnimate: true,

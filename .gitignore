@@ -39,3 +39,18 @@ yarn-error.*
 # generated native folders
 /ios
 /android
+
+# Lokalne artefakty budowania natywnego i EAS
+*.apk
+*.aab
+.eas/
+android/app/build/
+android/.gradle/
+
+# Pliki środowiskowe i klucze
+.env
+
+# Pliki systemowe i edytorów
+Thumbs.db
+.vscode/
+.idea/

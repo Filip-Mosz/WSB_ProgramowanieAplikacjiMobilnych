@@ -38,12 +38,12 @@ export const DelayHighlight = ({
             Animated.sequence([
                 Animated.timing(scale, {
                     toValue: 1.1,
-                    duration: 600, //time spent in 'swelled' state
+                    duration: 650, //time spent in 'swelled' state
                     useNativeDriver: true,
                 }),
                 Animated.timing(scale, {
                     toValue: 1,
-                    duration: 400,
+                    duration: 350,
                     useNativeDriver: true,
                 }),
             ]),
@@ -67,7 +67,7 @@ export const DelayHighlight = ({
             ]}
         >
             <Text style={styles.text}>
-                +{delay} s
+                {delayFormatter(delay).formattedText}
             </Text>
         </Animated.View>
     );

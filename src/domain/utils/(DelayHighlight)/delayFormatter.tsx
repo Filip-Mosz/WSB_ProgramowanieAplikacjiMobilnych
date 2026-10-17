@@ -3,13 +3,15 @@ export type DelayCategory = 'none' | 'small' | 'medium' | 'large';
 export interface DelayInfo {
     category: DelayCategory;
     shouldAnimate: boolean;
+    formattedText: string;
 }
 
 export const delayFormatter = (delay: number | null): DelayInfo => {
     if (delay === null || delay <= 0) {
         return {
             category: 'none',
-            shouldAnimate: false,
+            shouldAnimate: false,//add formatted text here
+            formattedText: '',
         };
     }
 
@@ -17,6 +19,7 @@ export const delayFormatter = (delay: number | null): DelayInfo => {
         return {
             category: 'small',
             shouldAnimate: false,
+            formattedText: `+${delay} s`,
         };
     }
 
@@ -24,11 +27,13 @@ export const delayFormatter = (delay: number | null): DelayInfo => {
         return {
             category: 'medium',
             shouldAnimate: true,
+            formattedText: `+${delay} s`,
         };
     }
 
     return {
         category: 'large',
         shouldAnimate: true,
+        formattedText: `+${delay} s`,
     };
 };

@@ -1,4 +1,5 @@
 import * as SQLite from 'expo-sqlite';
+import stopsData from '@/assets/data/stops.json'
 
 export const databasePromise = SQLite.openDatabaseAsync(
     "stop-scout.db"
@@ -26,4 +27,23 @@ export async function initializeDB(){
         );`
     );
     return db;
+}
+
+export async function initializeStopsFromJson() {
+    const db = await databasePromise;
+
+    await db.withTransactionAsync(async () =>{
+        for (const stop of stopsData.stops){
+            await db.runAsync(
+                `INSERT OR IGNORE INTO stops
+                (stopId, stopName, stopDesc, stopLat, stopLon)
+                VALUES (?, ?, ?, ?, ?)`,
+                [
+                    stop.stopId,
+                    stop.stopName,
+                    stop.stopDesc
+                ]
+            )
+        }
+    })
 }

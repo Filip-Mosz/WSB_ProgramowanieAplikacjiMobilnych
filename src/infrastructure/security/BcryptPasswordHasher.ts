@@ -1,16 +1,23 @@
-import bcrypt from "bcryptjs";
-import { IPasswordHasher } from "@/src/domain/repositories/IPasswordHasher";
+import bcrypt from 'bcryptjs';
+import * as Crypto from 'expo-crypto';
+import { IPasswordHasher } from '../../domain/repositories/IPasswordHasher';
+
+// Rejestracja generatora liczb losowych dla silnika Hermes w warstwie infrastruktury
+bcrypt.setRandomFallback((len: number) => {
+    const array = new Uint8Array(len);
+    Crypto.getRandomValues(array);
+    return Array.from(array);
+});
 
 export class BcryptPasswordHasher implements IPasswordHasher {
-        async hash(password: string): Promise<string>{
-            const salt = bcrypt.genSaltSync(10);
-            return bcrypt.hashSync(password);
-        }
+    private readonly saltRounds = 10;
 
-        async verify(
-            password: string,
-            passwordHash: string
-        ): Promise<boolean>{
-            return bcrypt.compareSync(password, passwordHash);
-        }
+    public hash(plainText: string): string {
+        const salt = bcrypt.genSaltSync(this.saltRounds);
+        return bcrypt.hashSync(plainText, salt);
     }
+
+    public verify(plainText: string, hash: string): boolean {
+        return bcrypt.compareSync(plainText, hash);
+    }
+}

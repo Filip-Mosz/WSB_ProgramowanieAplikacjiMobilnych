@@ -1,48 +1,22 @@
-import {databasePromise} from "./database";
-import {IPasswordHasher} from "@/src/domain/repositories/IPasswordHasher";
+import { User } from '@/src/domain/enities/User';
+import { IAuthRepository } from '@/src/domain/repositories/IAuthRepository';
+import { getDatabase } from './SqliteDatabase';
 
-export class SqliteAuthRepository {
-    constructor(
-        private readonly passwordHasher: IPasswordHasher
-    ) {}
-
-    async register(
-        username:string,
-        password: string
-    ): Promise<void> {
-        const db = await databasePromise;
-        const passwordHash = await this.passwordHasher.hash(password);
-        await db.runAsync(
-            `INSERT INTO users (username, passwordHash)
-                    VALUES (?,?)`,
-            username,
-            passwordHash
+export class SqliteAuthRepository implements IAuthRepository {
+    async findByUsername(username: string): Promise<User | null> {
+        const db = await getDatabase();
+        const user = await db.getFirstAsync<User>(
+            'SELECT id, username, passwordHash FROM users WHERE username = ?',
+            [username]
         );
+        return user || null;
     }
 
-    async login(
-        username: string,
-        password: string
-    ): Promise<boolean> {
-        const db = await databasePromise;
-
-        const user = await db.getFirstAsync<{
-            id: number;
-            username: string;
-            passwordHash: string;
-        }>(
-            `SELECT id, username, passwordHash
-            FROM users
-            WHERE username = ?`,
-                username
-        );
-
-        if (!user) {
-            return false
-        }
-
-        return this.passwordHasher.verify(
-            password, user.passwordHash
+    async createUser(user: User): Promise<void> {
+        const db = await getDatabase();
+        await db.runAsync(
+            'INSERT INTO users (id, username, passwordHash) VALUES (?, ?, ?)',
+            [user.id, user.username, user.passwordHash]
         );
     }
 }

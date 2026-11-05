@@ -1,34 +1,42 @@
+// components/DepartureCard.tsx
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { DelayHighlight } from "@/src/domain/utils/(DelayHighlight)/DelayHighlight";
+import { RouteNumber } from '@/src/domain/value-objects/RouteNumber';
+import { DelayHighlight } from "@/components/DelayHighlight";
 
-interface DepartureCardProps {
+export interface DepartureCardProps {
     routeId: number | string;
     headsign: string;
     theoreticalTime: string;
-    delayInSeconds: number | null;
+    delayInSeconds: number | null | undefined;
 }
 
-export default function DepartureCard({ routeId, headsign, theoreticalTime, delayInSeconds }: DepartureCardProps) {
-    const isDelayed = delayInSeconds && delayInSeconds > 0;
+export function DepartureCard({
+                                  routeId,
+                                  headsign,
+                                  theoreticalTime,
+                                  delayInSeconds,
+                              }: DepartureCardProps) {
+    const routeNumber = new RouteNumber(routeId);
 
     return (
         <View style={styles.cardContainer}>
             <View style={styles.routeBadge}>
-                <Text style={styles.routeText}>{routeId}</Text>
+                <Text style={styles.routeText}>{routeNumber.value}</Text>
             </View>
 
             <View style={styles.infoContainer}>
-                <Text style={styles.headsign}>{headsign}</Text>
+                <Text style={styles.headsign}>{headsign || 'Brak kierunku'}</Text>
                 <Text style={styles.timeText}>
-                    Planowo: {theoreticalTime}
-                    {/*{isDelayed && <Text style={styles.delayText}> (+{delayInSeconds}s)</Text>}*/}
+                    Planowo: {theoreticalTime || '--:--'}{' '}
                 </Text>
+                <DelayHighlight delayInSeconds={delayInSeconds} />
             </View>
-            <DelayHighlight delay={delayInSeconds} />
         </View>
     );
 }
+
+export default DepartureCard;
 
 const styles = StyleSheet.create({
     cardContainer: {
@@ -73,5 +81,5 @@ const styles = StyleSheet.create({
     delayText: {
         color: '#DC2626',
         fontWeight: 'bold',
-    }
+    },
 });

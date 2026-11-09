@@ -4,12 +4,12 @@ import {Stop} from "@/src/domain/enities/Stop";
 import {SqliteStopRowDto} from "@/src/infrastructure/storage/dto/SqliteStopRowDto";
 import {SqliteStopMapper} from "@/src/infrastructure/storage/mappers/SqliteStopMapper";
 
-export class SqliteStopRepository implements IStopRepository{
-    async initDatabase(): Promise<void>{
+export class SqliteStopRepository implements IStopRepository {
+    async initDatabase(): Promise<void> {
         await getDatabase();
     }
 
-    async getAllStops(): Promise<Stop[]>{
+    async getAllStops(): Promise<Stop[]> {
         const db = await getDatabase();
         const rows = await db.getAllAsync<SqliteStopRowDto>(
             'SELECT stopId, stopName, stopDesc, stopLat, stopLon FROM stops'
@@ -31,24 +31,24 @@ export class SqliteStopRepository implements IStopRepository{
         });
     }
 
-    async getStopsInBoundingBox(box: GeoBoundingBox): Promise<Stop[]> {
-        const db = await getDatabase();
-        const rows = await db.getAllAsync<SqliteStopRowDto>(
-            `SELECT stopId, stopName, stopDesc, stopLat, stopLon 
-       FROM stops 
-       WHERE stopLat BETWEEN ? AND ? 
-         AND stopLon BETWEEN ? AND ?`,
-            [box.minLat, box.maxLat, box.minLon, box.maxLon]
-        );
-        return rows.map(SqliteStopMapper.toEntity);
-    }
+    // async getStopsInBoundingBox(box: GeoBoundingBox): Promise<Stop[]> {
+    //     const db = await getDatabase();
+    //     const rows = await db.getAllAsync<SqliteStopRowDto>(
+    //         `SELECT stopId, stopName, stopDesc, stopLat, stopLon
+    //    FROM stops
+    //    WHERE stopLat BETWEEN ? AND ?
+    //      AND stopLon BETWEEN ? AND ?`,
+    //         [box.minLat, box.maxLat, box.minLon, box.maxLon]
+    //     );
+    //     return rows.map(SqliteStopMapper.toEntity);
+    // }
 
     async getFavorites(userId: string): Promise<Stop[]> {
         const db = await getDatabase();
         const rows = await db.getAllAsync<SqliteStopRowDto>(
-            `SELECT stopId, stopName, NULL as stopDesc, stopLat, stopLon, notes 
-       FROM favorites 
-       WHERE userId = ?`,
+            `SELECT stopId, stopName, NULL as stopDesc, stopLat, stopLon, notes
+             FROM favorites
+             WHERE userId = ?`,
             [userId]
         );
         return rows.map(SqliteStopMapper.toEntity);
@@ -61,7 +61,7 @@ export class SqliteStopRepository implements IStopRepository{
         await db.runAsync(
             `INSERT OR REPLACE INTO favorites (userId, stopId, stopName, stopLat, stopLon, notes)
        VALUES (?, ?, ?, ?, ?, ?)`,
-            [userId, row.stopId, row.stopName, row.stopLat, row.stopLon, row.notes]
+            [userId, row.stopId, row.stopName, row.stopLat, row.stopLon, row.notes ?? null]
         );
     }
 

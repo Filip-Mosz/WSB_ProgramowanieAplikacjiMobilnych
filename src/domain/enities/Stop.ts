@@ -5,7 +5,7 @@ export class Stop {
         public readonly stopId: number,
         public readonly stopName: string,
         public readonly coordinates: Coordinates,
-        public readonly stopDesc?: string,
+        public readonly stopDesc?: string | undefined,
         public readonly notes?: string
     )
     {

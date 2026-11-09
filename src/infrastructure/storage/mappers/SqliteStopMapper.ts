@@ -15,14 +15,14 @@ export class SqliteStopMapper{
         );
     }
 
-    public static toRow(entity: Stop): SqliteStopRowDto{
+    public static toRow(entity: Stop): SqliteStopRowDto {
         return {
-          stopId: entity.stopId,
-          stopName: entity.stopName,
-          stopDesc: entity.stopDesc,
-          stopLat: entity.coordinates.latitude,
+            stopId: entity.stopId,
+            stopName: entity.stopName,
+            stopDesc: entity.stopDesc || null,
+            stopLat: entity.coordinates.latitude,
             stopLon: entity.coordinates.longitude,
-            notes: entity.notes || null
+            notes: entity.notes || null,
         };
     }
 }

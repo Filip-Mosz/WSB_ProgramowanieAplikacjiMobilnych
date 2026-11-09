@@ -25,12 +25,12 @@ class AppContainer{
         return this._authRepo
     }
 
-    public get stopRepository(): IStopRepository{
-        if (!this._stopRepo){
-            this._stopRepo = new SqliteStopRepository();
-        }
-        return this._stopRepo;
-    }
+    // public get stopRepository(): IStopRepository{
+    //     if (!this._stopRepo){
+    //         this._stopRepo = new SqliteStopRepository();
+    //     }
+    //     return this._stopRepo;
+    // }
 
     public get ztmApiRepository(): IZtmApiRepository{
         if (!this._apiRepo){
@@ -65,11 +65,11 @@ class AppContainer{
         );
     }
 
-    public get syncStopsUseCase(): SyncStopsUseCase{
-        return new SyncStopsUseCase(
-            this.stopRepository, this.ztmApiRepository
-        );
-    }
+    // public get syncStopsUseCase(): SyncStopsUseCase{
+    //     return new SyncStopsUseCase(
+    //         this.stopRepository, this.ztmApiRepository
+    //     );
+    // }
 
     public get liveDeparturesUseCase(): GetLiveDeparturesUseCase{
         return new GetLiveDeparturesUseCase(

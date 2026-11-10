@@ -1,13 +1,20 @@
 import { SymbolView } from 'expo-symbols';
-import { Link, Tabs } from 'expo-router';
-import { Platform, Pressable } from 'react-native';
+import {Link, Redirect, Tabs} from 'expo-router';
+import { Pressable } from 'react-native';
 
 import Colors from '@/constants/Colors';
 import { useColorScheme } from '@/components/useColorScheme';
 import { useClientOnlyValue } from '@/components/useClientOnlyValue';
+import {useStore} from "@/src/store/useStore";
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
+
+    const user = useStore((state) => state.user);
+
+    if (!user) {
+        return <Redirect href="/login" />;
+    }
 
   return (
     <Tabs

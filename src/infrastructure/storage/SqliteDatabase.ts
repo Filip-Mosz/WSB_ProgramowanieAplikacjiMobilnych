@@ -1,10 +1,10 @@
 import * as SQLite from 'expo-sqlite';
 
 let dbInstance: SQLite.SQLiteDatabase | null = null;
-
 export async function getDatabase(): Promise<SQLite.SQLiteDatabase> {
     if (!dbInstance) {
         dbInstance = await SQLite.openDatabaseAsync('stopscout.db');
+                //todo init test user needs to check if user exists
         await dbInstance.execAsync(`
       PRAGMA journal_mode = WAL;
 
@@ -13,6 +13,10 @@ export async function getDatabase(): Promise<SQLite.SQLiteDatabase> {
         username TEXT UNIQUE NOT NULL,
         passwordHash TEXT NOT NULL
       );
+      
+      --init test user
+      INSERT INTO users 
+      VALUES (0, 'Test', 'test');
 
       CREATE TABLE IF NOT EXISTS stops (
         stopId INTEGER PRIMARY KEY NOT NULL,

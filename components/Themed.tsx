@@ -10,8 +10,8 @@ import {useColorScheme} from "@/components/useColorScheme";
 const Colors = (ColorsModule as any).Colors || (ColorsModule as any).default || ColorsModule;
 
 type ThemeProps = {  lightColor?: string;  darkColor?: string;};
-export type TextProps = ThemeProps & DefaultText['props'];
-export type ViewProps = ThemeProps & DefaultView['props'];
+export type TextProps = ThemeProps & DefaultTextProps;
+export type ViewProps = ThemeProps & DefaultViewProps;
 
 export function useThemeColor(
   props: { light?: string; dark?: string },

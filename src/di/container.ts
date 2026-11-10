@@ -7,7 +7,7 @@ import {SqliteStopRepository} from "@/src/infrastructure/storage/SqliteStopRepos
 import {ZtmApiClient} from "@/src/infrastructure/api/ZtmApiClient";
 import {BcryptPasswordHasher} from "@/src/infrastructure/security/BcryptPasswordHasher";
 import {RegisterUserUseCase} from "@/src/use-cases/RegisterUserUseCase";
-import {LoginUserUseCase} from "@/src/store/LoginUserUseCase";
+import {LoginUserUseCase} from "@/src/use-cases/LoginUserUseCase";
 import {SyncStopsUseCase} from "@/src/use-cases/SyncStopsUseCase";
 import {GetLiveDeparturesUseCase} from "@/src/use-cases/GetLiveDeparturesUseCase";
 

@@ -1,10 +1,10 @@
 import * as SQLite from 'expo-sqlite';
+import {BcryptPasswordHasher} from "@/src/infrastructure/security/BcryptPasswordHasher";
 
 let dbInstance: SQLite.SQLiteDatabase | null = null;
 export async function getDatabase(): Promise<SQLite.SQLiteDatabase> {
     if (!dbInstance) {
         dbInstance = await SQLite.openDatabaseAsync('stopscout.db');
-                //todo init test user needs to check if user exists
         await dbInstance.execAsync(`
       PRAGMA journal_mode = WAL;
 
@@ -13,10 +13,6 @@ export async function getDatabase(): Promise<SQLite.SQLiteDatabase> {
         username TEXT UNIQUE NOT NULL,
         passwordHash TEXT NOT NULL
       );
-      
-      --init test user
-      INSERT INTO users 
-      VALUES (0, 'Test', 'test');
 
       CREATE TABLE IF NOT EXISTS stops (
         stopId INTEGER PRIMARY KEY NOT NULL,
@@ -39,6 +35,33 @@ export async function getDatabase(): Promise<SQLite.SQLiteDatabase> {
 
       CREATE INDEX IF NOT EXISTS idx_stops_coords ON stops (stopLat, stopLon);
     `);
+        await seedTestUser(dbInstance);//wywołanie funkcji tworzenia uzytkownika testowego
     }
     return dbInstance;
+}
+
+async function seedTestUser(db: SQLite.SQLiteDatabase) {//
+    const username = 'Test';
+    const password = 'test';
+
+    const existingUser = await db.getFirstAsync(
+        'SELECT id FROM users WHERE username = ?',
+        [username]
+    );
+
+    if (existingUser) {
+        return;
+    }
+
+    const passwordHasher = new BcryptPasswordHasher();
+
+    const passwordHash = passwordHasher.hash(password);
+
+    await db.runAsync(
+        `INSERT INTO users (id, username, passwordHash)
+     VALUES (?, ?, ?)`,
+        ['test-user-001', username, passwordHash]
+    );
+
+    console.log('Utworzono użytkownika testowego.');
 }

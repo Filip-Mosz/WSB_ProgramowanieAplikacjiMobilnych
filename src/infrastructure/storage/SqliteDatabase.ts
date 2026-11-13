@@ -41,8 +41,8 @@ export async function getDatabase(): Promise<SQLite.SQLiteDatabase> {
 }
 
 async function seedTestUser(db: SQLite.SQLiteDatabase) {//
-    const username = 'Test';
-    const password = 'test';
+    const username = 'test';
+    const password = 'test1234';
 
     const existingUser = await db.getFirstAsync(
         'SELECT id FROM users WHERE username = ?',

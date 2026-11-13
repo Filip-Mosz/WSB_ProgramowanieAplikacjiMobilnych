@@ -10,13 +10,15 @@ import {RegisterUserUseCase} from "@/src/use-cases/RegisterUserUseCase";
 import {LoginUserUseCase} from "@/src/use-cases/LoginUserUseCase";
 import {SyncStopsUseCase} from "@/src/use-cases/SyncStopsUseCase";
 import {GetLiveDeparturesUseCase} from "@/src/use-cases/GetLiveDeparturesUseCase";
+import {ILocationService} from "@/src/domain/repositories/ILocationService";
+import {ExpoLocationService} from "@/src/infrastructure/location/ExpoLocationService";
 
 class AppContainer {
     private _authRepo?: IAuthRepository;
     private _stopRepo?: IStopRepository;
     private _apiRepo?: IZtmApiRepository;
     private _passwordHasher?: IPasswordHasher;
-    // private _locationService?: ILocationService;
+    private _locationService?: ILocationService;
 
     public get authRepository(): IAuthRepository {
         if (!this._authRepo) this._authRepo = new SqliteAuthRepository();
@@ -38,10 +40,10 @@ class AppContainer {
         return this._passwordHasher;
     }
 
-    // public get locationService(): ILocationService {
-    //     if (!this._locationService) this._locationService = new ExpoLocationService();
-    //     return this._locationService;
-    // }
+    public get locationService(): ILocationService {
+        if (!this._locationService) this._locationService = new ExpoLocationService();
+        return this._locationService;
+    }
 
     public get registerUserUseCase(): RegisterUserUseCase {
         return new RegisterUserUseCase(this.authRepository, this.passwordHasher);
